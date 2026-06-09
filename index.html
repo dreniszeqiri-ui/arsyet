@@ -1,0 +1,247 @@
+<index.html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pse duhet të më pëlqesh? ❤️</title>
+
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #ffb6d9, #ffeef7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px;
+        border-radius: 25px;
+        max-width: 700px;
+        width: 85%;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        position: relative;
+        z-index: 10;
+    }
+
+    h1 {
+        color: #ff4081;
+    }
+
+    p {
+        font-size: 24px;
+        min-height: 60px;
+    }
+
+    button {
+        padding: 12px 28px;
+        font-size: 18px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        margin-top: 15px;
+    }
+
+    #yesBtn {
+        background: #4CAF50;
+        color: white;
+    }
+
+    #noBtn {
+        background: #ff5252;
+        color: white;
+        position: relative;
+    }
+
+    #choiceButtons {
+        display: none;
+    }
+
+    .heart {
+        position: absolute;
+        font-size: 24px;
+        animation: float 6s linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes float {
+        from {
+            transform: translateY(100vh);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(-120vh);
+            opacity: 0;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop preload="auto">
+    <source src="lofi.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container" id="box">
+    <h1 id="title">Pse duhet të më pëlqesh? ❤️</h1>
+
+    <p id="text">Shtyp "Start" për të filluar...</p>
+
+    <button id="nextBtn" onclick="nextPage()">Start</button>
+
+    <div id="choiceButtons">
+        <button id="yesBtn">Po ❤️</button>
+        <button id="noBtn">Jo 🙈</button>
+    </div>
+</div>
+
+<script>
+const pages = [
+    "Kujdesem sinqerisht për njerëzit që kam afër. ❤️",
+    "Di të dëgjoj kur dikush ka nevojë të flasë. 🎧",
+    "Mund të të bëj të qeshësh edhe në momente të sikletshme. 😂",
+    "I mbështes njerëzit për të cilët më intereson. 🤝",
+    "Mbaj mend gjërat e vogla që kanë rëndësi. 🧠",
+    "Ndonjëherë jam pak i turpshëm, por gjithmonë kam qëllime të mira. 💬",
+    "Kur më pëlqen dikush, tregoj përkushtim të vërtetë. ✨",
+    "Përpiqem të jem i sjellshëm dhe mirëkuptues. 🌟",
+    "Jeta bëhet më e bukur kur e ndan me dikë të veçantë. 🎉",
+    "Dhe sinqerisht... mënyra më e mirë për të vendosur është të më njohësh më mirë. 😊"
+];
+
+let currentPage = -1;
+let musicStarted = false;
+
+function startMusic() {
+    if (musicStarted) return;
+
+    const music = document.getElementById("music");
+    music.volume = 0.15;
+
+    music.play()
+        .then(() => {
+            musicStarted = true;
+        })
+        .catch(error => {
+            console.log("Audio nuk mund të fillojë:", error);
+        });
+}
+
+function stopMusic() {
+    const music = document.getElementById("music");
+    music.pause();
+    music.currentTime = 0;
+}
+
+function fade(callback) {
+    const box = document.getElementById("box");
+
+    box.style.opacity = 0;
+    box.style.transform = "scale(0.95)";
+
+    setTimeout(() => {
+        callback();
+
+        box.style.opacity = 1;
+        box.style.transform = "scale(1)";
+    }, 300);
+}
+
+function nextPage() {
+    if (currentPage === -1) {
+        startMusic();
+    }
+
+    currentPage++;
+
+    if (currentPage < pages.length) {
+
+        fade(() => {
+            document.getElementById("title").textContent =
+                `Arsyeja ${currentPage + 1} ❤️`;
+
+            document.getElementById("text").textContent =
+                pages[currentPage];
+
+            document.getElementById("nextBtn").textContent =
+                "Tjetra ➜";
+        });
+
+    } else {
+
+        stopMusic();
+
+        fade(() => {
+            document.getElementById("title").textContent =
+                "Pra... çfarë mendon?";
+
+            document.getElementById("text").textContent =
+                "Nëse ndihesh rehat me këtë... a mund të më japësh një mundësi?";
+
+            document.getElementById("nextBtn").style.display = "none";
+
+            document.getElementById("choiceButtons").style.display = "block";
+        });
+    }
+}
+
+// YES BUTTON
+document.getElementById("yesBtn").onclick = () => {
+
+    document.getElementById("title").textContent =
+        "Më vjen mirë 😊";
+
+    document.getElementById("text").textContent =
+        "Faleminderit që ishe e sinqertë. Kjo do të thotë shumë për mua.";
+
+    document.getElementById("choiceButtons").style.display =
+        "none";
+};
+
+// NO BUTTON
+document.getElementById("noBtn").addEventListener("mouseover", function() {
+
+    this.style.position = "fixed";
+
+    this.style.left =
+        Math.random() * (window.innerWidth - 100) + "px";
+
+    this.style.top =
+        Math.random() * (window.innerHeight - 60) + "px";
+});
+
+// FLOATING HEARTS
+setInterval(() => {
+
+    const heart = document.createElement("div");
+
+    heart.classList.add("heart");
+
+    heart.innerHTML = "❤️";
+
+    heart.style.left =
+        Math.random() * window.innerWidth + "px";
+
+    heart.style.fontSize =
+        (20 + Math.random() * 20) + "px";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 6000);
+
+}, 400);
+
+</script>
+
+</body>
+</html>
+```
